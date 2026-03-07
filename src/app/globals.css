@@ -1,0 +1,198 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', sans-serif;
+  }
+  
+  body {
+    @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased;
+    line-height: 1.6;
+  }
+
+  /* Improved line clamping for better text truncation */
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+  
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+}
+
+@layer components {
+  /* Enhanced prose styling for articles */
+  .prose-content {
+    @apply leading-relaxed text-gray-800 dark:text-gray-200 max-w-none;
+    font-size: 18px;
+    line-height: 1.8;
+  }
+  
+  .prose-content p {
+    @apply mb-6 text-gray-800 dark:text-gray-200;
+  }
+  
+  .prose-content img {
+    @apply rounded-lg my-6 max-w-full h-auto shadow-md;
+  }
+  
+  .prose-content blockquote {
+    @apply border-l-4 border-accent pl-6 my-6 italic text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 py-4 pr-4 rounded-r-lg;
+  }
+  
+  .prose-content h2, .prose-content h3 {
+    @apply font-bold mt-8 mb-4 text-gray-900 dark:text-gray-100;
+  }
+  
+  .prose-content h2 {
+    @apply text-2xl;
+  }
+  
+  .prose-content h3 {
+    @apply text-xl;
+  }
+  
+  .prose-content a {
+    @apply text-accent hover:text-accent-dark underline font-medium;
+  }
+  
+  .prose-content figure {
+    @apply my-6;
+  }
+  
+  .prose-content figcaption {
+    @apply text-sm text-gray-500 dark:text-gray-400 mt-2 text-center italic;
+  }
+  
+  .prose-content ul, .prose-content ol {
+    @apply mb-6 pl-8;
+  }
+  
+  .prose-content li {
+    @apply mb-2;
+  }
+  
+  .prose-content strong {
+    @apply font-bold text-gray-900 dark:text-gray-100;
+  }
+  
+  .prose-content em {
+    @apply italic;
+  }
+
+  /* News ticker animation */
+  .ticker-wrapper {
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  
+  .ticker-content {
+    display: inline-flex;
+    gap: 3rem;
+    animation: ticker 60s linear infinite;
+  }
+  
+  .ticker-item {
+    flex-shrink: 0;
+    font-size: 14px;
+    padding-right: 1rem;
+  }
+  
+  @keyframes ticker {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+  
+  .ticker-content:hover {
+    animation-play-state: paused;
+  }
+  
+  @media (max-width: 768px) {
+    .ticker-content {
+      animation-duration: 40s;
+    }
+  }
+
+  /* Smooth hover transitions */
+  .hover-lift {
+    @apply transition-all duration-300;
+  }
+  
+  .hover-lift:hover {
+    @apply transform -translate-y-1 shadow-lg;
+  }
+
+  /* Slide up animation for floating player */
+  @keyframes slide-up {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  .animate-slide-up {
+    animation: slide-up 0.3s ease-out;
+  }
+
+  /* Loading spinner */
+  .spinner {
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Enhanced focus styles */
+  .focus-outline:focus {
+    @apply outline-none ring-2 ring-accent ring-offset-2;
+  }
+
+  /* Custom scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+}
