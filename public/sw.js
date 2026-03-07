@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ac878-news-v1';
+const CACHE_NAME = 'ac878-news-v2';
 const OFFLINE_URL = '/offline.html';
 
 // Files to cache on install (app shell)
@@ -58,7 +58,14 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Stale-while-revalidate for pages
+  // Network-first for navigation requests (HTML pages)
+  // This prevents stale cache from breaking Next.js client-side navigation/hydration
+  if (request.mode === 'navigate') {
+    event.respondWith(networkFirst(request));
+    return;
+  }
+
+  // Stale-while-revalidate for other same-origin requests
   event.respondWith(staleWhileRevalidate(request));
 });
 
