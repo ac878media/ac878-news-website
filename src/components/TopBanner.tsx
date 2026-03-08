@@ -1,3 +1,5 @@
+import GoogleTranslate from './GoogleTranslate';
+
 export default function TopBanner() {
   return (
     <div className="bg-white border-b border-gray-200 hidden md:block">
@@ -33,8 +35,10 @@ export default function TopBanner() {
           <span className="text-gray-700 text-xs">AC878 24小时澳洲华语FM电台</span>
         </div>
 
-        {/* Right: App Downloads & Main Site Link */}
+        {/* Right: Translate + App Downloads + Main Site Link */}
         <div className="flex items-center gap-3 text-xs">
+          <GoogleTranslate />
+          <span className="text-gray-400">|</span>
           <a
             href="https://ac878.com.au"
             target="_blank"
