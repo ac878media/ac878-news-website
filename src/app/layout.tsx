@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import BackToTop from '@/components/BackToTop';
 import InstallPrompt from '@/components/InstallPrompt';
 import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration';
+import NavigationFix from '@/components/NavigationFix';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 
 export const metadata: Metadata = {
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-screen flex flex-col">
         <ServiceWorkerRegistration />
+        <NavigationFix />
         <ThemeProvider>
           <TopBanner />
           <Header />
