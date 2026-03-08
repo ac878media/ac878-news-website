@@ -4,28 +4,23 @@ import { useEffect } from 'react';
 
 export default function ServiceWorkerRegistration() {
   useEffect(() => {
+    // Unregister any existing service workers to fix navigation issues
+    // SW was caching RSC flight data, causing dead clicks on Next.js Link components
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/sw.js')
-        .then((registration) => {
-          console.log('Service Worker registered successfully:', registration);
-          
-          // Check for updates
-          registration.addEventListener('updatefound', () => {
-            console.log('New service worker available');
-          });
-        })
-        .catch((error) => {
-          console.log('Service Worker registration failed:', error);
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        registrations.forEach((registration) => {
+          registration.unregister();
+          console.log('Service Worker unregistered to fix navigation');
         });
-
-      // Listen for service worker updates
-      navigator.serviceWorker.addEventListener('controllerchange', () => {
-        console.log('Service Worker updated, reloading page');
-        window.location.reload();
       });
+      // Clear all caches
+      if ('caches' in window) {
+        caches.keys().then((names) => {
+          names.forEach((name) => caches.delete(name));
+        });
+      }
     }
   }, []);
 
-  return null; // This component doesn't render anything
+  return null;
 }
