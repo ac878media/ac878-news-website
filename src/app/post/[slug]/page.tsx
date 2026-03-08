@@ -10,6 +10,7 @@ import {
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import Image from 'next/image';
+
 import Link from 'next/link';
 import { formatRelativeDate, formatFullDate, getFallbackImageUrl, calculateReadingTime, formatReadingTime } from '@/lib/utils';
 import Breadcrumbs from '@/components/Breadcrumbs';

@@ -1,5 +1,6 @@
-import Link from 'next/link';
+
 import Image from 'next/image';
+import Link from 'next/link';
 import MobileNav from './MobileNav';
 import NavDropdown from './NavDropdown';
 import ThemeToggle from './ThemeToggle';

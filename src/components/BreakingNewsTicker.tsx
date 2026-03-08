@@ -1,7 +1,8 @@
 'use client';
 
-import { WPPost, stripHtml } from '@/lib/wordpress';
 import Link from 'next/link';
+import { WPPost, stripHtml } from '@/lib/wordpress';
+
 
 interface Props {
   posts: WPPost[];

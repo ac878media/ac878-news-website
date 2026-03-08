@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
 import { WPPost, getPostImage, stripHtml } from '@/lib/wordpress';
 import { formatRelativeDate, getFallbackImageUrl, calculateReadingTime, formatReadingTime } from '@/lib/utils';
 
