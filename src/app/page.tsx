@@ -49,8 +49,8 @@ export default async function HomePage() {
       <div className="max-w-7xl mx-auto px-4 pt-6">
         <a href="https://ac878.com.au/magazine-octopus/" target="_blank" rel="noopener noreferrer" className="block">
           <Image
-            src="https://ac878.com.au/wp-content/uploads/2026/02/ISSUE157_0220-scaled.jpg"
-            alt="八爪娱 Octopus Magazine Issue 157"
+            src="https://ac878.com.au/wp-content/uploads/2026/03/Issue159_26030601.jpg"
+            alt="八爪娱 Octopus Magazine Issue 159"
             width={1920}
             height={500}
             className="w-full h-auto rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
