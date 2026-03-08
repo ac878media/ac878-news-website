@@ -17,8 +17,8 @@ export default function NavigationFix() {
       const href = anchor.getAttribute('href');
       if (!href) return;
       
-      // Only handle internal /post/ and /category/ and /search links
-      if (href.startsWith('/post/') || href.startsWith('/category/') || href === '/search' || href.startsWith('/search')) {
+      // Handle all internal links (starting with / but not //)
+      if (href.startsWith('/') && !href.startsWith('//')) {
         // Don't handle if modifier keys are pressed (open in new tab, etc.)
         if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
         // Don't handle target="_blank" links
