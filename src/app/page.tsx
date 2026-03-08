@@ -1,4 +1,4 @@
-import { fetchPosts, categorizePost, WPPost } from '@/lib/wordpress';
+import { fetchPosts, categorizePost, getPostImage, WPPost } from '@/lib/wordpress';
 import { PostCardLarge, PostCardSmall } from '@/components/PostCard';
 import CategorySection from '@/components/CategorySection';
 import BreakingNewsTicker from '@/components/BreakingNewsTicker';
@@ -175,7 +175,7 @@ export default async function HomePage() {
 
 // Featured Post Card for Hero Section
 function FeaturedPostCard({ post }: { post: WPPost }) {
-  const image = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || getFallbackImageUrl();
+  const image = getPostImage(post) || getFallbackImageUrl(categorizePost(post), post.id);
   
   return (
     <Link href={`/post/${post.slug}`} className="group block">
@@ -207,7 +207,7 @@ function FeaturedPostCard({ post }: { post: WPPost }) {
 
 // Secondary Post Card for Hero Section
 function SecondaryPostCard({ post }: { post: WPPost }) {
-  const image = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || getFallbackImageUrl();
+  const image = getPostImage(post) || getFallbackImageUrl(categorizePost(post), post.id);
   
   return (
     <Link href={`/post/${post.slug}`} className="group block">

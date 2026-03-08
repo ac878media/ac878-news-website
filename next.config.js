@@ -6,6 +6,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'ac878.com.au',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
     ],
   },
 };

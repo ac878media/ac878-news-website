@@ -1,10 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { WPPost, getPostImage, stripHtml } from '@/lib/wordpress';
+import { WPPost, getPostImage, stripHtml, categorizePost } from '@/lib/wordpress';
 import { formatRelativeDate, getFallbackImageUrl, calculateReadingTime, formatReadingTime } from '@/lib/utils';
 
 export function PostCardLarge({ post }: { post: WPPost }) {
-  const image = getPostImage(post) || getFallbackImageUrl();
+  const image = getPostImage(post) || getFallbackImageUrl(categorizePost(post), post.id);
   const excerpt = stripHtml(post.excerpt.rendered).slice(0, 150);
   const readingTime = calculateReadingTime(post.content.rendered);
 
@@ -38,7 +38,7 @@ export function PostCardLarge({ post }: { post: WPPost }) {
 }
 
 export function PostCardSmall({ post }: { post: WPPost }) {
-  const image = getPostImage(post) || getFallbackImageUrl();
+  const image = getPostImage(post) || getFallbackImageUrl(categorizePost(post), post.id);
   const readingTime = calculateReadingTime(post.content.rendered);
 
   return (

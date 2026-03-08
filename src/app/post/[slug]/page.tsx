@@ -57,9 +57,9 @@ export default async function PostPage({ params }: PageProps) {
   const post = await fetchPostBySlug(slug);
   if (!post) notFound();
 
-  const image = getPostImage(post) || getFallbackImageUrl();
   const title = stripHtml(post.title.rendered);
   const category = categorizePost(post);
+  const image = getPostImage(post) || getFallbackImageUrl(category, post.id);
   const breadcrumbs = getBreadcrumbs(category, title);
   const readingTime = calculateReadingTime(post.content.rendered);
   
