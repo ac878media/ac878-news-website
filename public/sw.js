@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ac878-news-v2';
+const CACHE_NAME = 'ac878-news-v3';
 const OFFLINE_URL = '/offline.html';
 
 // Files to cache on install (app shell)
@@ -58,15 +58,12 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Network-first for navigation requests (HTML pages)
-  // This prevents stale cache from breaking Next.js client-side navigation/hydration
-  if (request.mode === 'navigate') {
-    event.respondWith(networkFirst(request));
-    return;
-  }
-
-  // Stale-while-revalidate for other same-origin requests
-  event.respondWith(staleWhileRevalidate(request));
+  // Network-first for ALL non-static requests (HTML pages + Next.js RSC data fetches)
+  // Next.js client-side navigation uses RSC fetches (not mode='navigate') with
+  // headers like RSC:1 or _rsc query params. Caching these with stale-while-revalidate
+  // returns stale flight data that breaks client-side routing (dead clicks).
+  // Safe approach: network-first for everything except static assets.
+  event.respondWith(networkFirst(request));
 });
 
 // Network-first strategy
