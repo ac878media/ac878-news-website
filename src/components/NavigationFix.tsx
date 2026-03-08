@@ -1,14 +1,13 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
 export default function NavigationFix() {
-  const router = useRouter();
-
   useEffect(() => {
-    // Global click handler to ensure all internal links work
-    // Catches cases where Next.js Link hydration fails silently
+    // Global click handler to force internal link navigation
+    // Next.js router intercepts <a> clicks with preventDefault() but
+    // fails to complete navigation for server-component-rendered Links.
+    // This capture-phase handler fires FIRST and forces window.location navigation.
     const handleClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const anchor = target.closest('a[href]') as HTMLAnchorElement | null;
@@ -18,27 +17,23 @@ export default function NavigationFix() {
       const href = anchor.getAttribute('href');
       if (!href) return;
       
-      // Only handle internal links
-      if (href.startsWith('/') && !href.startsWith('//')) {
+      // Only handle internal /post/ and /category/ and /search links
+      if (href.startsWith('/post/') || href.startsWith('/category/') || href === '/search' || href.startsWith('/search')) {
         // Don't handle if modifier keys are pressed (open in new tab, etc.)
         if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
         // Don't handle target="_blank" links
         if (anchor.target === '_blank') return;
         
+        // Force navigation directly — bypass Next.js router entirely
         e.preventDefault();
-        e.stopPropagation();
-        
-        try {
-          router.push(href);
-        } catch {
-          window.location.href = href;
-        }
+        e.stopImmediatePropagation();
+        window.location.href = href;
       }
     };
 
     document.addEventListener('click', handleClick, true); // capture phase
     return () => document.removeEventListener('click', handleClick, true);
-  }, [router]);
+  }, []);
 
   return null;
 }
