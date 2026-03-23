@@ -103,6 +103,27 @@ export async function fetchRelatedPosts(currentPost: WPPost, limit = 4): Promise
   return posts.filter(post => post.id !== currentPost.id).slice(0, limit);
 }
 
+export async function fetchAdjacentPosts(currentPost: WPPost): Promise<{ prev: WPPost | null; next: WPPost | null }> {
+  // Fetch the post published just before this one (older)
+  const prevRes = await fetch(
+    `${WP_API}/posts?categories=${DAILY_NEWS_CAT}&per_page=1&before=${currentPost.date}&orderby=date&order=desc&_embed`,
+    { next: { revalidate: 300 } }
+  );
+  const prevPosts = prevRes.ok ? await prevRes.json() : [];
+  
+  // Fetch the post published just after this one (newer)
+  const nextRes = await fetch(
+    `${WP_API}/posts?categories=${DAILY_NEWS_CAT}&per_page=1&after=${currentPost.date}&orderby=date&order=asc&_embed`,
+    { next: { revalidate: 300 } }
+  );
+  const nextPosts = nextRes.ok ? await nextRes.json() : [];
+  
+  return {
+    prev: prevPosts[0] || null,
+    next: nextPosts[0] || null,
+  };
+}
+
 export function getCategoryDisplayName(category: string): { zh: string; en: string } {
   const categories: Record<string, { zh: string; en: string }> = {
     australia: { zh: '澳洲新闻', en: 'Australian News' },

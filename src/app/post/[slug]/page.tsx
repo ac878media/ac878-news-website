@@ -3,7 +3,8 @@ import {
   fetchPosts, 
   stripHtml, 
   getPostImage, 
-  fetchRelatedPosts, 
+  fetchRelatedPosts,
+  fetchAdjacentPosts, 
   categorizePost,
   getBreadcrumbs 
 } from '@/lib/wordpress';
@@ -65,6 +66,7 @@ export default async function PostPage({ params }: PageProps) {
   
   // Get related posts
   const relatedPosts = await fetchRelatedPosts(post, 4);
+  const { prev, next } = await fetchAdjacentPosts(post);
 
   // Clean content: remove social share widgets
   let cleanContent = post.content.rendered
@@ -178,6 +180,50 @@ export default async function PostPage({ params }: PageProps) {
           }}
         />
       </article>
+
+      {/* Prev/Next Navigation */}
+      <nav className="max-w-4xl mx-auto px-4 py-6" aria-label="文章导航">
+        <div className="grid grid-cols-2 gap-4">
+          {prev ? (
+            <Link
+              href={`/post/${prev.slug}`}
+              className="group flex items-start gap-3 p-4 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            >
+              <svg className="w-5 h-5 mt-0.5 text-gray-400 group-hover:text-accent transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              <div className="min-w-0">
+                <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">上一篇</span>
+                <h4
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-accent transition-colors line-clamp-2 mt-1"
+                  dangerouslySetInnerHTML={{ __html: prev.title.rendered }}
+                />
+              </div>
+            </Link>
+          ) : (
+            <div />
+          )}
+          {next ? (
+            <Link
+              href={`/post/${next.slug}`}
+              className="group flex items-start gap-3 p-4 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-right justify-end"
+            >
+              <div className="min-w-0">
+                <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">下一篇</span>
+                <h4
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-accent transition-colors line-clamp-2 mt-1"
+                  dangerouslySetInnerHTML={{ __html: next.title.rendered }}
+                />
+              </div>
+              <svg className="w-5 h-5 mt-0.5 text-gray-400 group-hover:text-accent transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          ) : (
+            <div />
+          )}
+        </div>
+      </nav>
 
       {/* Related Posts */}
       {relatedPosts.length > 0 && (
