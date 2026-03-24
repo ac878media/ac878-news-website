@@ -11,7 +11,7 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 
 export const metadata: Metadata = {
   title: {
-    default: '878时讯 — Australia Chinese News | 澳洲华语新闻 | 悉尼中文电台 FM 87.8 | AC878 News',
+    default: '878时讯 — Australia Chinese News | 澳洲华语新闻 | 悉尼中文电台 FM 87.8 | AC 878 News',
     template: '%s | 878时讯 — Australia Chinese News',
   },
   description: '878时讯是澳洲领先的华语新闻门户，提供悉尼本地、澳洲财经、中港及国际新闻。AC878 FM 87.8 — Sydney\'s 24-hour Chinese radio and news.',
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'zh_CN',
-    siteName: '878时讯 — Australia Chinese News | AC878 News',
+    siteName: '878时讯 — Australia Chinese News | AC 878 News',
     images: [{ url: 'https://ac878.com.au/wp-content/uploads/2025/02/1024x1024.png', width: 1024, height: 1024 }],
   },
   twitter: {
