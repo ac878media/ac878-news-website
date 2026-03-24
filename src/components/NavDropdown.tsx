@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 
 interface DropdownItem {
   href: string;
@@ -27,16 +28,30 @@ export default function NavDropdown({ trigger, items }: NavDropdownProps) {
   const handleMouseLeave = () => {
     timeoutRef.current = setTimeout(() => {
       setIsOpen(false);
-    }, 150); // Small delay to allow moving to dropdown
+    }, 150);
   };
 
+  const handleClick = () => {
+    setIsOpen(!isOpen);
+  };
+
+  // Close on click outside
   useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
     };
   }, []);
+
+  const isExternal = (href: string) => href.startsWith('http');
 
   return (
     <div 
@@ -45,7 +60,10 @@ export default function NavDropdown({ trigger, items }: NavDropdownProps) {
       onMouseLeave={handleMouseLeave}
       ref={dropdownRef}
     >
-      <button className="text-gray-300 hover:text-accent transition-colors flex items-center gap-1">
+      <button 
+        className="text-gray-300 hover:text-accent transition-colors flex items-center gap-1"
+        onClick={handleClick}
+      >
         {trigger}
         <svg 
           className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} 
@@ -60,15 +78,27 @@ export default function NavDropdown({ trigger, items }: NavDropdownProps) {
       {isOpen && (
         <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg py-2 min-w-48 z-50">
           {items.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-accent transition-colors"
-            >
-              {item.label}
-            </a>
+            isExternal(item.href) ? (
+              <a
+                key={item.href}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-accent transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                {item.label}
+              </a>
+            ) : (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-accent transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                {item.label}
+              </Link>
+            )
           ))}
         </div>
       )}

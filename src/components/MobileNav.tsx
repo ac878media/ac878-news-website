@@ -37,6 +37,7 @@ export default function MobileNav() {
     },
     { href: 'https://ac878.com.au/interview/', label: '🎤 独家专访', subtitle: 'Exclusive Interviews', external: true },
     { href: 'https://ac878.com.au/category/videoprogram/878-interview/', label: '📺 878会客室', subtitle: 'Talk Show', external: true },
+    { href: 'https://ac878.com.au/category/comm-news/', label: '📰 社区新闻', subtitle: 'Community News', external: true },
     
     { href: '/listen', label: '🎙️ 收听', subtitle: 'Listen' },
     { href: 'https://stream4.rcast.net/71937/', label: '📻 FM 87.8 直播', subtitle: 'Live Radio', external: true },

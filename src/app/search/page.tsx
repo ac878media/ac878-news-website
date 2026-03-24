@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { searchPosts, WPPost } from '@/lib/wordpress';
+import { searchPosts, fetchPosts, WPPost } from '@/lib/wordpress';
 import { PostCardLarge } from '@/components/PostCard';
 import { PostCardSkeleton } from '@/components/SkeletonLoader';
 import Breadcrumbs from '@/components/Breadcrumbs';
@@ -15,17 +15,18 @@ function SearchPageContent() {
   const [searched, setSearched] = useState(false);
 
   const performSearch = async (searchQuery: string) => {
-    if (!searchQuery.trim()) {
-      setResults([]);
-      setSearched(false);
-      return;
-    }
-
     setLoading(true);
     try {
-      const searchResults = await searchPosts(searchQuery.trim(), 20);
-      setResults(searchResults);
-      setSearched(true);
+      if (!searchQuery.trim()) {
+        // No query — show all recent articles
+        const allPosts = await fetchPosts(30, 1);
+        setResults(allPosts);
+        setSearched(true);
+      } else {
+        const searchResults = await searchPosts(searchQuery.trim(), 20);
+        setResults(searchResults);
+        setSearched(true);
+      }
     } catch (error) {
       console.error('Search error:', error);
       setResults([]);
@@ -40,6 +41,9 @@ function SearchPageContent() {
     if (initialQuery) {
       setQuery(initialQuery);
       performSearch(initialQuery);
+    } else {
+      // No query param — load all recent articles by default
+      performSearch('');
     }
   }, [searchParams]);
 
@@ -116,10 +120,14 @@ function SearchPageContent() {
         <>
           <div className="mb-6">
             <p className="text-gray-600">
-              找到 <span className="font-semibold text-accent">{results.length}</span> 条相关结果
-              {query && (
+              {query.trim() ? (
                 <>
-                  关于 "<span className="font-semibold">{query}</span>"
+                  找到 <span className="font-semibold text-accent">{results.length}</span> 条相关结果
+                  关于 &ldquo;<span className="font-semibold">{query}</span>&rdquo;
+                </>
+              ) : (
+                <>
+                  共 <span className="font-semibold text-accent">{results.length}</span> 条最新新闻
                 </>
               )}
             </p>
@@ -156,13 +164,8 @@ function SearchPageContent() {
 
       {!searched && !loading && (
         <div className="text-center py-12">
-          <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">开始搜索</h3>
-          <p className="text-gray-600">
-            在上方输入框中输入关键词，搜索878时讯的新闻内容
-          </p>
+          <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="text-gray-600 mt-4">加载中...</p>
         </div>
       )}
     </div>
