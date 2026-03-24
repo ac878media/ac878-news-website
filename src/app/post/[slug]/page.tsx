@@ -36,6 +36,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${title} | 878时讯`,
     description,
+    alternates: {
+      canonical: `https://news.ac878.com.au/post/${slug}`,
+    },
     openGraph: {
       title,
       description,

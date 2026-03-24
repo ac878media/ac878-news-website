@@ -3,6 +3,9 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: '收听新闻 Listen',
   description: '收听878时讯每日新闻广播。Listen to AC878 daily news bulletins.',
+  alternates: {
+    canonical: 'https://news.ac878.com.au/listen',
+  },
 };
 
 const WP_API = 'https://ac878.com.au/wp-json/wp/v2';

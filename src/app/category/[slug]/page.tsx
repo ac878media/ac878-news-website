@@ -33,6 +33,9 @@ export async function generateMetadata({ params }: PageProps) {
   return {
     title: `${categoryName.zh} | 878时讯`,
     description: `${categoryName.zh} - ${categoryName.en}。878时讯为您提供最新的${categoryName.zh}资讯。`,
+    alternates: {
+      canonical: `https://news.ac878.com.au/category/${slug}`,
+    },
     openGraph: {
       title: `${categoryName.zh} | 878时讯`,
       description: `最新${categoryName.zh}资讯`,

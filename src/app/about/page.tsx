@@ -5,6 +5,9 @@ import Breadcrumbs from '@/components/Breadcrumbs';
 export const metadata = {
   title: '关于我们 | 878时讯',
   description: '878时讯 - AC878 Media Group Pty Ltd，澳洲华语新闻门户，为华人社区提供及时准确的新闻资讯。',
+  alternates: {
+    canonical: 'https://news.ac878.com.au/about',
+  },
   openGraph: {
     title: '关于我们 | 878时讯',
     description: '了解878时讯，澳洲华语新闻门户',

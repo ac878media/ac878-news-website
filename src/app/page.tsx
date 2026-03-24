@@ -155,7 +155,7 @@ export default async function HomePage() {
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'WebSite',
-            name: '878时讯 | AC878 News',
+            name: '878时讯 — 澳洲华语新闻 | AC878 News',
             alternateName: '878时讯',
             url: 'https://news.ac878.com.au',
             publisher: {
