@@ -7,6 +7,7 @@ import BackToTop from '@/components/BackToTop';
 import InstallPrompt from '@/components/InstallPrompt';
 import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration';
 import NavigationFix from '@/components/NavigationFix';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 
 export const metadata: Metadata = {
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="zh-Hans">
+    <html lang="zh-Hans" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#da2d2d" />
@@ -44,17 +45,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="msapplication-TileColor" content="#da2d2d" />
         <meta name="msapplication-TileImage" content="/icons/icon-192.png" />
       </head>
-      <body className="min-h-screen flex flex-col">
+      <body className="min-h-screen flex flex-col" suppressHydrationWarning>
         <ServiceWorkerRegistration />
         <NavigationFix />
-        <ThemeProvider>
-          <TopBanner />
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <BackToTop />
-          <InstallPrompt />
-        </ThemeProvider>
+        <ErrorBoundary>
+          <ThemeProvider>
+            <TopBanner />
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <BackToTop />
+            <InstallPrompt />
+          </ThemeProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );
