@@ -12,6 +12,14 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/wp-content/uploads/:path*',
+        destination: 'https://ac878.com.au/wp-content/uploads/:path*',
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
