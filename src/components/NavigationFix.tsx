@@ -17,6 +17,21 @@ export default function NavigationFix() {
       const href = anchor.getAttribute('href');
       if (!href) return;
       
+      // Handle hash links — scroll to section
+      if (href.startsWith('/#') || href.startsWith('#')) {
+        const hash = href.includes('#') ? href.split('#')[1] : '';
+        if (hash) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          const el = document.getElementById(hash);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth' });
+            window.history.replaceState(null, '', `#${hash}`);
+          }
+        }
+        return;
+      }
+
       // Handle all internal links (starting with / but not //)
       if (href.startsWith('/') && !href.startsWith('//')) {
         // Don't handle if modifier keys are pressed (open in new tab, etc.)
