@@ -33,9 +33,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const description = stripHtml(post.excerpt.rendered).slice(0, 160);
   const image = getPostImage(post);
 
+  // Extract keywords from title for article-specific SEO
+  const keywords = [
+    ...title.split(/[，、：·\s]+/).filter((w: string) => w.length >= 2).slice(0, 5),
+    '澳洲新闻', '华语新闻', 'AC878',
+  ].join(',');
+
   return {
-    title: `${title} | 878时讯`,
+    title: title,
     description,
+    keywords,
     alternates: {
       canonical: `https://news.ac878.com.au/post/${slug}`,
     },
