@@ -271,7 +271,25 @@ function CategorySectionEnhanced({
   posts: WPPost[]; 
   category: string;
 }) {
-  if (posts.length === 0) return null;
+  if (posts.length === 0) {
+    return (
+      <section id={id} className="scroll-mt-20">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-8 bg-accent rounded-full"></div>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{title}</h2>
+              <p className="text-sm text-gray-400 dark:text-gray-500">{subtitle}</p>
+            </div>
+          </div>
+          <Link href={`/category/${category}`} className="text-accent hover:text-accent-dark font-medium text-sm transition-colors">
+            查看全部 →
+          </Link>
+        </div>
+        <p className="text-gray-500 dark:text-gray-400 text-center py-8">暂无最新内容，请查看全部分类</p>
+      </section>
+    );
+  }
 
   const [featured, ...rest] = posts;
 
