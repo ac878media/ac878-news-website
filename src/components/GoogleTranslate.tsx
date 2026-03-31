@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 
 const LANGUAGES = [
   { code: '', label: '简体中文', flag: '🇨🇳' },
-  { code: 'zh-TW', label: '繁體中文', flag: '🇹🇼' },
+  { code: 'zh-TW', label: '繁體中文', flag: '🇭🇰' },
   { code: 'en', label: 'English', flag: '🇦🇺' },
 ];
 
