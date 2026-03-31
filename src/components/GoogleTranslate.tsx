@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 
 const LANGUAGES = [
   { code: '', label: '简体中文', flag: '🇨🇳' },
@@ -121,6 +122,22 @@ export default function GoogleTranslate() {
   };
 
   const currentLangObj = LANGUAGES.find(l => l.code === currentLang) || LANGUAGES[0];
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [dropdownPos, setDropdownPos] = useState({ top: 0, right: 0 });
+
+  const updatePos = useCallback(() => {
+    if (buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setDropdownPos({
+        top: rect.bottom + 4,
+        right: window.innerWidth - rect.right,
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) updatePos();
+  }, [isOpen, updatePos]);
 
   return (
     <>
@@ -130,6 +147,7 @@ export default function GoogleTranslate() {
       {/* Custom language selector */}
       <div ref={dropdownRef} className="relative">
         <button
+          ref={buttonRef}
           onClick={() => setIsOpen(!isOpen)}
           className="flex items-center gap-1.5 text-gray-600 hover:text-[#da2d2d] transition-colors px-2 py-1 rounded-md hover:bg-gray-100"
           aria-label="Select language"
@@ -146,8 +164,11 @@ export default function GoogleTranslate() {
           </svg>
         </button>
 
-        {isOpen && (
-          <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50 min-w-[160px]">
+        {isOpen && typeof document !== 'undefined' && createPortal(
+          <div
+            style={{ position: 'fixed', top: dropdownPos.top, right: dropdownPos.right, zIndex: 99999 }}
+            className="bg-white rounded-lg shadow-lg border border-gray-200 py-1 min-w-[160px]"
+          >
             {LANGUAGES.map((lang) => (
               <button
                 key={lang.code}
@@ -165,7 +186,8 @@ export default function GoogleTranslate() {
                 )}
               </button>
             ))}
-          </div>
+          </div>,
+          document.body
         )}
       </div>
     </>
