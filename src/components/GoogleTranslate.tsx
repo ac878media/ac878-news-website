@@ -85,8 +85,8 @@ export default function GoogleTranslate() {
     });
 
     if (!langCode) {
-      // Reset to Chinese — cookies cleared above, just reload
-      window.location.reload();
+      // Reset to Chinese — cookies cleared above, force hard reload to bypass cache
+      window.location.href = window.location.pathname + '?lang=zh&t=' + Date.now();
       return;
     }
 
@@ -96,15 +96,8 @@ export default function GoogleTranslate() {
     document.cookie = `googtrans=${value};expires=${expires};path=/`;
     document.cookie = `googtrans=${value};expires=${expires};path=/;domain=${parentDomain}`;
 
-    // Try programmatic trigger first, fall back to reload
-    const combo = document.querySelector('.goog-te-combo') as HTMLSelectElement;
-    if (combo) {
-      combo.value = langCode;
-      combo.dispatchEvent(new Event('change'));
-      setCurrentLang(langCode);
-    } else {
-      window.location.reload();
-    }
+    // Force reload with cache bust so Google Translate picks up the cookie
+    window.location.href = window.location.pathname + '?lang=' + langCode + '&t=' + Date.now();
   };
 
   const currentLangObj = LANGUAGES.find(l => l.code === currentLang) || LANGUAGES[0];
