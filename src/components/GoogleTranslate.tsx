@@ -74,20 +74,27 @@ export default function GoogleTranslate() {
   const selectLanguage = (langCode: string) => {
     setIsOpen(false);
 
+    // Clear ALL googtrans cookies on every possible domain first
+    const hostname = window.location.hostname;
+    const parentDomain = '.' + hostname.split('.').slice(-2).join('.');
+    const domains = ['', hostname, '.' + hostname, parentDomain];
+    domains.forEach(d => {
+      let c = 'googtrans=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+      if (d) c += ';domain=' + d;
+      document.cookie = c;
+    });
+
     if (!langCode) {
-      // Reset to Chinese — clear cookies and reload
-      document.cookie = 'googtrans=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
-      document.cookie = 'googtrans=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.' + window.location.hostname.split('.').slice(-2).join('.');
+      // Reset to Chinese — cookies cleared above, just reload
       window.location.reload();
       return;
     }
 
-    // Set cookie on both current and parent domain
+    // Set cookie on both current hostname and parent domain
     const value = `/zh-CN/${langCode}`;
     const expires = new Date(Date.now() + 30 * 86400000).toUTCString();
     document.cookie = `googtrans=${value};expires=${expires};path=/`;
-    const parent = '.' + window.location.hostname.split('.').slice(-2).join('.');
-    document.cookie = `googtrans=${value};expires=${expires};path=/;domain=${parent}`;
+    document.cookie = `googtrans=${value};expires=${expires};path=/;domain=${parentDomain}`;
 
     // Try programmatic trigger first, fall back to reload
     const combo = document.querySelector('.goog-te-combo') as HTMLSelectElement;
