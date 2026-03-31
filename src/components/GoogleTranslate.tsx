@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef, useCallback } from 'react';
-import { createPortal } from 'react-dom';
+import { useEffect, useState, useRef } from 'react';
 
 const LANGUAGES = [
   { code: '', label: '简体中文', flag: '🇨🇳' },
@@ -123,21 +122,19 @@ export default function GoogleTranslate() {
 
   const currentLangObj = LANGUAGES.find(l => l.code === currentLang) || LANGUAGES[0];
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const [dropdownPos, setDropdownPos] = useState({ top: 0, right: 0 });
-
-  const updatePos = useCallback(() => {
-    if (buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect();
-      setDropdownPos({
-        top: rect.bottom + 4,
-        right: window.innerWidth - rect.right,
-      });
-    }
-  }, []);
+  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
 
   useEffect(() => {
-    if (isOpen) updatePos();
-  }, [isOpen, updatePos]);
+    if (isOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setDropdownStyle({
+        position: 'fixed' as const,
+        top: rect.bottom + 4,
+        right: window.innerWidth - rect.right,
+        zIndex: 99999,
+      });
+    }
+  }, [isOpen]);
 
   return (
     <>
@@ -145,7 +142,7 @@ export default function GoogleTranslate() {
       <div id="google_translate_element_hidden" style={{ display: 'none' }} />
       
       {/* Custom language selector */}
-      <div ref={dropdownRef} className="relative">
+      <div ref={dropdownRef}>
         <button
           ref={buttonRef}
           onClick={() => setIsOpen(!isOpen)}
@@ -164,9 +161,9 @@ export default function GoogleTranslate() {
           </svg>
         </button>
 
-        {isOpen && typeof document !== 'undefined' && createPortal(
+        {isOpen && (
           <div
-            style={{ position: 'fixed', top: dropdownPos.top, right: dropdownPos.right, zIndex: 99999 }}
+            style={dropdownStyle}
             className="bg-white rounded-lg shadow-lg border border-gray-200 py-1 min-w-[160px]"
           >
             {LANGUAGES.map((lang) => (
@@ -186,8 +183,7 @@ export default function GoogleTranslate() {
                 )}
               </button>
             ))}
-          </div>,
-          document.body
+          </div>
         )}
       </div>
     </>
