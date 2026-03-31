@@ -8,34 +8,18 @@ const LANGUAGES = [
   { code: 'en', label: 'English', flag: '🇦🇺' },
 ];
 
-function setCookie(name: string, value: string, days: number) {
-  const d = new Date();
-  d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
-  document.cookie = `${name}=${value};expires=${d.toUTCString()};path=/;domain=${window.location.hostname}`;
-  // Also set on parent domain
-  const parts = window.location.hostname.split('.');
-  if (parts.length > 2) {
-    const parent = '.' + parts.slice(-2).join('.');
-    document.cookie = `${name}=${value};expires=${d.toUTCString()};path=/;domain=${parent}`;
-  }
-}
-
-function getCookie(name: string): string {
-  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-  return match ? match[2] : '';
-}
-
 export default function GoogleTranslate() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState('');
-  const [scriptLoaded, setScriptLoaded] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
 
   // Read current language from cookie on mount
   useEffect(() => {
-    const googtrans = getCookie('googtrans');
-    if (googtrans) {
-      const lang = googtrans.split('/').pop() || '';
+    const match = document.cookie.match(/googtrans=([^;]+)/);
+    if (match) {
+      const lang = match[1].split('/').pop() || '';
       setCurrentLang(lang === 'zh-CN' ? '' : lang);
     }
   }, []);
@@ -51,32 +35,20 @@ export default function GoogleTranslate() {
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
 
-  // Load Google Translate script (hidden, used for actual translation)
+  // Load Google Translate script once
   useEffect(() => {
-    if ((window as any).__googleTranslateLoaded) {
-      setScriptLoaded(true);
-      return;
-    }
+    if (document.getElementById('google-translate-script')) return;
 
-    (window as any).__googleTranslateLoaded = true;
     (window as any).googleTranslateElementInit = () => {
       try {
         const google = (window as any).google;
-        if (google && google.translate) {
+        if (google?.translate) {
           new google.translate.TranslateElement(
-            {
-              pageLanguage: 'zh-CN',
-              includedLanguages: 'en,zh-CN,zh-TW',
-              layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-              autoDisplay: false,
-            },
+            { pageLanguage: 'zh-CN', includedLanguages: 'en,zh-CN,zh-TW', autoDisplay: false },
             'google_translate_element_hidden'
           );
-          setScriptLoaded(true);
         }
-      } catch (e) {
-        console.error('Google Translate init error:', e);
-      }
+      } catch (e) { /* silent */ }
     };
 
     const script = document.createElement('script');
@@ -84,46 +56,9 @@ export default function GoogleTranslate() {
     script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
     script.async = true;
     document.head.appendChild(script);
-
-    return () => {
-      (window as any).__googleTranslateLoaded = false;
-    };
   }, []);
 
-  const selectLanguage = (langCode: string) => {
-    setCurrentLang(langCode);
-    setIsOpen(false);
-
-    if (!langCode || langCode === 'zh-CN') {
-      // Reset to original Chinese
-      setCookie('googtrans', '', -1);
-      // Remove Google Translate bar and restore page
-      const frame = document.querySelector('.skiptranslate') as HTMLElement;
-      if (frame) frame.style.display = 'none';
-      document.body.style.top = '0px';
-      // Reload to clear translation
-      window.location.reload();
-      return;
-    }
-
-    // Set the translation cookie
-    setCookie('googtrans', `/zh-CN/${langCode}`, 30);
-
-    // Try to trigger Google Translate programmatically
-    const selectEl = document.querySelector('.goog-te-combo') as HTMLSelectElement;
-    if (selectEl) {
-      selectEl.value = langCode;
-      selectEl.dispatchEvent(new Event('change'));
-    } else {
-      // If widget not ready, reload with cookie set
-      window.location.reload();
-    }
-  };
-
-  const currentLangObj = LANGUAGES.find(l => l.code === currentLang) || LANGUAGES[0];
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
-
+  // Position dropdown
   useEffect(() => {
     if (isOpen && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
@@ -136,12 +71,40 @@ export default function GoogleTranslate() {
     }
   }, [isOpen]);
 
+  const selectLanguage = (langCode: string) => {
+    setIsOpen(false);
+
+    if (!langCode) {
+      // Reset to Chinese — clear cookies and reload
+      document.cookie = 'googtrans=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+      document.cookie = 'googtrans=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.' + window.location.hostname.split('.').slice(-2).join('.');
+      window.location.reload();
+      return;
+    }
+
+    // Set cookie on both current and parent domain
+    const value = `/zh-CN/${langCode}`;
+    const expires = new Date(Date.now() + 30 * 86400000).toUTCString();
+    document.cookie = `googtrans=${value};expires=${expires};path=/`;
+    const parent = '.' + window.location.hostname.split('.').slice(-2).join('.');
+    document.cookie = `googtrans=${value};expires=${expires};path=/;domain=${parent}`;
+
+    // Try programmatic trigger first, fall back to reload
+    const combo = document.querySelector('.goog-te-combo') as HTMLSelectElement;
+    if (combo) {
+      combo.value = langCode;
+      combo.dispatchEvent(new Event('change'));
+      setCurrentLang(langCode);
+    } else {
+      window.location.reload();
+    }
+  };
+
+  const currentLangObj = LANGUAGES.find(l => l.code === currentLang) || LANGUAGES[0];
+
   return (
     <>
-      {/* Hidden container for Google Translate widget */}
       <div id="google_translate_element_hidden" style={{ display: 'none' }} />
-      
-      {/* Custom language selector */}
       <div ref={dropdownRef}>
         <button
           ref={buttonRef}
@@ -151,21 +114,13 @@ export default function GoogleTranslate() {
         >
           <span className="text-sm">{currentLangObj.flag}</span>
           <span className="text-xs">{currentLangObj.label}</span>
-          <svg
-            className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </button>
 
         {isOpen && (
-          <div
-            style={dropdownStyle}
-            className="bg-white rounded-lg shadow-lg border border-gray-200 py-1 min-w-[160px]"
-          >
+          <div style={dropdownStyle} className="bg-white rounded-lg shadow-lg border border-gray-200 py-1 min-w-[160px]">
             {LANGUAGES.map((lang) => (
               <button
                 key={lang.code}
