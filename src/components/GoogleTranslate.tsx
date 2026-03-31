@@ -3,15 +3,9 @@
 import { useEffect, useState, useRef } from 'react';
 
 const LANGUAGES = [
-  { code: '', label: '中文', flag: '🇨🇳' },
-  { code: 'en', label: 'English', flag: '🇦🇺' },
+  { code: '', label: '简体中文', flag: '🇨🇳' },
   { code: 'zh-TW', label: '繁體中文', flag: '🇹🇼' },
-  { code: 'ja', label: '日本語', flag: '🇯🇵' },
-  { code: 'ko', label: '한국어', flag: '🇰🇷' },
-  { code: 'vi', label: 'Tiếng Việt', flag: '🇻🇳' },
-  { code: 'th', label: 'ไทย', flag: '🇹🇭' },
-  { code: 'id', label: 'Indonesia', flag: '🇮🇩' },
-  { code: 'ms', label: 'Melayu', flag: '🇲🇾' },
+  { code: 'en', label: 'English', flag: '🇦🇺' },
 ];
 
 function setCookie(name: string, value: string, days: number) {
@@ -72,7 +66,7 @@ export default function GoogleTranslate() {
           new google.translate.TranslateElement(
             {
               pageLanguage: 'zh-CN',
-              includedLanguages: 'en,zh-CN,zh-TW,ja,ko,vi,th,id,ms',
+              includedLanguages: 'en,zh-CN,zh-TW',
               layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
               autoDisplay: false,
             },
