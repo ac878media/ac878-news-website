@@ -3,24 +3,6 @@
  */
 export function formatRelativeDate(dateStr: string): string {
   const date = new Date(dateStr);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  const diffDays = Math.floor(diffHours / 24);
-
-  // Recent posts (less than 24 hours) show relative time
-  if (diffHours < 1) {
-    const diffMinutes = Math.floor(diffMs / (1000 * 60));
-    return diffMinutes < 1 ? '刚刚' : `${diffMinutes}分钟前`;
-  }
-  if (diffHours < 24) {
-    return `${diffHours}小时前`;
-  }
-  if (diffDays < 7) {
-    return `${diffDays}天前`;
-  }
-
-  // Older posts show full date
   return date.toLocaleDateString('zh-CN', {
     year: 'numeric',
     month: 'long',

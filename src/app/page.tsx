@@ -84,7 +84,7 @@ export default async function HomePage() {
                   </div>
                 </div>
                 <Link
-                  href="/search"
+                  href="/articles"
                   className="text-accent hover:text-accent-dark font-medium text-sm transition-colors"
                 >
                   查看更多 →
