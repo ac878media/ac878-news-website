@@ -51,6 +51,8 @@ export default function Header() {
               ]}
             />
             
+            <a href="https://ac878.com.au/category/comm-news/" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-accent transition-colors">社区新闻</a>
+            
             <a href="https://ac878.com.au/interview/" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-accent transition-colors">独家专访</a>
             <a href="https://ac878.com.au/category/videoprogram/878-interview/" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-accent transition-colors">878会客室</a>
             
