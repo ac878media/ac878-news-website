@@ -12,6 +12,22 @@ import Link from 'next/link';
 
 export const revalidate = 300;
 
+async function fetchOctopusBanner(): Promise<string> {
+  try {
+    const res = await fetch(
+      'https://ac878.com.au/wp-json/wp/v2/media?search=Octopus_banner&per_page=5&orderby=date&order=desc',
+      { next: { revalidate: 3600 } }
+    );
+    if (!res.ok) return 'https://ac878.com.au/wp-content/uploads/2026/03/Octopus_banner_162-scaled.jpg';
+    const items = await res.json();
+    // Find the latest desktop banner (not the app version)
+    const banner = items.find((i: any) => i.source_url?.includes('Octopus_banner_') && !i.source_url?.includes('_app_'));
+    return banner?.source_url || 'https://ac878.com.au/wp-content/uploads/2026/03/Octopus_banner_162-scaled.jpg';
+  } catch {
+    return 'https://ac878.com.au/wp-content/uploads/2026/03/Octopus_banner_162-scaled.jpg';
+  }
+}
+
 export default async function HomePage() {
   const posts = await fetchPosts(20); // Reduced to avoid cache size issues
 
@@ -40,16 +56,18 @@ export default async function HomePage() {
     categories[cat] = categories[cat].slice(0, 5);
   });
 
+  const octopusBannerUrl = await fetchOctopusBanner();
+
   return (
     <>
       {/* Breaking News Ticker */}
       <BreakingNewsTicker posts={posts} />
 
-      {/* Octopus Magazine Banner */}
+      {/* Octopus Magazine Banner - auto-fetches latest from WordPress */}
       <div className="max-w-7xl mx-auto px-4 pt-6">
         <a href="https://ac878.com.au/magazine-octopus/" target="_blank" rel="noopener noreferrer" className="block">
           <Image
-            src="https://ac878.com.au/wp-content/uploads/2026/03/Octopus_banner_161-1.jpg"
+            src={octopusBannerUrl}
             alt="八爪娱 Octopus Magazine - Newest Issue"
             width={1920}
             height={500}
