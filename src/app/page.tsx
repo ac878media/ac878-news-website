@@ -66,13 +66,12 @@ export default async function HomePage() {
       {/* Octopus Magazine Banner - auto-fetches latest from WordPress */}
       <div className="max-w-7xl mx-auto px-4 pt-6">
         <a href="https://ac878.com.au/magazine-octopus/" target="_blank" rel="noopener noreferrer" className="block">
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={octopusBannerUrl}
             alt="八爪娱 Octopus Magazine - Newest Issue"
-            width={1920}
-            height={500}
             className="w-full h-auto rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
-            priority
+            loading="eager"
           />
         </a>
       </div>
