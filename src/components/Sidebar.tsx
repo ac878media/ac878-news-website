@@ -135,6 +135,14 @@ export default function Sidebar({ posts }: Props) {
           >
             国际新闻
           </Link>
+          <a
+            href="https://ac878.com.au/category/comm-news/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-gray-600 dark:text-gray-300 hover:text-accent transition-colors p-2 rounded hover:bg-white dark:hover:bg-gray-600 col-span-2"
+          >
+            📰 社区新闻 Community News
+          </a>
         </div>
       </div>
     </aside>

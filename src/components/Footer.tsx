@@ -101,6 +101,18 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Quick Links */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 text-sm">
+          <a href="https://news.ac878.com.au/#australia" className="text-gray-400 hover:text-accent transition-colors">澳洲新闻</a>
+          <a href="https://news.ac878.com.au/#business" className="text-gray-400 hover:text-accent transition-colors">财经新闻</a>
+          <a href="https://news.ac878.com.au/#china" className="text-gray-400 hover:text-accent transition-colors">中港新闻</a>
+          <a href="https://news.ac878.com.au/#international" className="text-gray-400 hover:text-accent transition-colors">国际新闻</a>
+          <a href="https://ac878.com.au/category/comm-news/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-accent transition-colors">📰 社区新闻</a>
+          <a href="https://ac878.com.au/program/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-accent transition-colors">电台节目</a>
+          <a href="https://ac878.com.au/interview/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-accent transition-colors">独家专访</a>
+          <a href="https://ac878.com.au/magazine-octopus/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-accent transition-colors">八爪娱</a>
+        </div>
+
         <div className="border-t border-gray-800 pt-6 text-center text-sm">
           <p>© 2026 AC878 Media Group Pty Ltd</p>
           <p className="mt-1 text-gray-500">Suite 11, 89-97 Jones St, Ultimo NSW 2007</p>
