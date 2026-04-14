@@ -34,7 +34,6 @@ export default async function HomePage() {
   const categories: Record<string, WPPost[]> = {
     australia: [],
     business: [],
-    china: [],
     international: [],
   };
 
@@ -132,13 +131,7 @@ export default async function HomePage() {
                 posts={categories.business}
                 category="business"
               />
-              <CategorySectionEnhanced 
-                id="china" 
-                title="中港新闻" 
-                subtitle="Mainland China & HK News" 
-                posts={categories.china}
-                category="china"
-              />
+
               <CategorySectionEnhanced 
                 id="international" 
                 title="国际新闻" 
