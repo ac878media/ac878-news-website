@@ -28,7 +28,6 @@ export default function Header() {
           <nav className="hidden lg:flex items-center gap-4 xl:gap-6 text-sm">
             <Link href="/#australia" className="text-gray-300 hover:text-accent transition-colors">澳洲新闻</Link>
             <Link href="/#business" className="text-gray-300 hover:text-accent transition-colors">财经新闻</Link>
-            <Link href="/#china" className="text-gray-300 hover:text-accent transition-colors">中港新闻</Link>
             <Link href="/#international" className="text-gray-300 hover:text-accent transition-colors">国际新闻</Link>
             
             {/* New Menu Items */}

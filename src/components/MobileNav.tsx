@@ -9,7 +9,6 @@ export default function MobileNav() {
   const menuItems: Array<{ href: string; label: string; subtitle: string; external?: boolean; children?: Array<{ href: string; label: string; subtitle?: string }> }> = [
     { href: '/#australia', label: '澳洲新闻', subtitle: 'Australian News' },
     { href: '/#business', label: '财经新闻', subtitle: 'Business & Finance' },
-    { href: '/#china', label: '中港新闻', subtitle: 'China & HK News' },
     { href: '/#international', label: '国际新闻', subtitle: 'International News' },
     
     // New Menu Items
