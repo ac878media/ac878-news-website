@@ -15,7 +15,8 @@ export default function Header() {
             alt="AC878"
             width={48}
             height={48}
-            className="rounded-lg bg-white p-1"
+            className="rounded-lg bg-white p-2 shadow-sm"
+            style={{ backgroundColor: 'white' }}
           />
           <div>
             <span className="text-white text-xl font-bold tracking-tight">878时讯</span>
