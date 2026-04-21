@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { WPPost, stripHtml, getPostImage } from '@/lib/wordpress';
 import { formatRelativeDate } from '@/lib/utils';
 import Newsletter from './Newsletter';
-import WeatherWidget from './WeatherWidget';
+
 
 interface Props {
   posts: WPPost[];
@@ -16,9 +16,6 @@ export default function Sidebar({ posts }: Props) {
 
   return (
     <aside className="space-y-8">
-      {/* Weather Widget */}
-      <WeatherWidget />
-      
       {/* Most Read Section */}
       <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md">
         <div className="flex items-center gap-3 mb-6">
