@@ -1,9 +1,9 @@
-
 import Image from 'next/image';
 import Link from 'next/link';
 import { WPPost, stripHtml, getPostImage } from '@/lib/wordpress';
 import { formatRelativeDate } from '@/lib/utils';
 import Newsletter from './Newsletter';
+import WeatherWidget from './WeatherWidget';
 
 
 interface Props {
@@ -16,6 +16,9 @@ export default function Sidebar({ posts }: Props) {
 
   return (
     <aside className="space-y-8">
+      {/* Weather Widget */}
+      <WeatherWidget />
+
       {/* Most Read Section */}
       <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md">
         <div className="flex items-center gap-3 mb-6">
@@ -41,7 +44,7 @@ export default function Sidebar({ posts }: Props) {
                     className="text-sm font-medium leading-tight group-hover:text-accent transition-colors line-clamp-2 text-gray-900 dark:text-gray-100"
                     dangerouslySetInnerHTML={{ __html: post.title.rendered }}
                   />
-                  <time className="text-xs text-gray-400 dark:text-gray-500 mt-1 block">
+                  <time className="text-xs text-gray-400 dark:text-gray-400 mt-1 block">
                     {formatRelativeDate(post.date)}
                   </time>
                 </div>
@@ -91,7 +94,7 @@ export default function Sidebar({ posts }: Props) {
           </p>
           <Link
             href="/about"
-            className="inline-flex items-center text-accent hover:text-accent-dark font-medium text-sm transition-colors"
+            className="inline-flex items text-accent hover:text-accent-dark font-medium text-sm transition-colors"
           >
             了解更多
             <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
