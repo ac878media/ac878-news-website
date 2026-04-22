@@ -15,13 +15,23 @@ export default function WeatherWidget() {
 
   useEffect(() => {
     const fetchWeather = async () => {
+      // Timeout: if fetch takes > 8s, give up
+      const timeout = setTimeout(() => {
+        setError(true);
+        setLoading(false);
+      }, 8000);
+
       try {
-        // Use Open-Meteo API — no API key, works globally, CORS-enabled
-        // Sydney: lat=-33.8688, lon=151.2093
+        // Use Open-Meteo API — no API key, CORS-enabled, reliable
+        const controller = new AbortController();
+        const signal = controller.signal;
+
         const response = await fetch(
           'https://api.open-meteo.com/v1/forecast?latitude=-33.8688&longitude=151.2093&current=temperature_2m,weather_code&timezone=Australia%2FSydney&forecast_days=1',
-          { cache: 'no-cache' }
+          { cache: 'no-cache', signal }
         );
+
+        clearTimeout(timeout);
 
         if (!response.ok) {
           throw new Error('Weather fetch failed');
@@ -31,7 +41,6 @@ export default function WeatherWidget() {
         const temp = Math.round(data.current?.temperature_2m ?? 0);
         const code = data.current?.weather_code ?? 0;
 
-        // Map WMO weather codes to Chinese conditions + emoji
         const weatherMap: Record<number, { condition: string; icon: string }> = {
           0: { condition: '晴天', icon: '☀️' },
           1: { condition: '晴间多云', icon: '🌤️' },
@@ -69,6 +78,7 @@ export default function WeatherWidget() {
           icon: mapped.icon,
         });
       } catch (err) {
+        clearTimeout(timeout);
         setError(true);
       } finally {
         setLoading(false);
@@ -77,7 +87,6 @@ export default function WeatherWidget() {
 
     fetchWeather();
 
-    // Refresh every 30 minutes
     const interval = setInterval(fetchWeather, 30 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
