@@ -158,27 +158,8 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'WebSite',
-            name: '878时讯 — Australia Chinese News | AC 878 News',
-            alternateName: '878时讯',
-            url: 'https://news.ac878.com.au',
-            publisher: {
-              '@type': 'Organization',
-              name: 'AC878 Media Group Pty Ltd',
-              logo: {
-                '@type': 'ImageObject',
-                url: 'https://ac878.com.au/wp-content/uploads/2025/02/1024x1024.png',
-              },
-            },
-          }),
-        }}
-      />
+      {/* Lang attribute set via script to avoid extra parsing }} */}
+      <script dangerouslySetInnerHTML={{ __html: 'document.documentElement.lang="zh-Hans";' }} />
     </>
   );
 }
