@@ -159,8 +159,7 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* Lang attribute set via script to avoid extra parsing }} */}
-      <script dangerouslySetInnerHTML={{ __html: 'document.documentElement.lang="zh-Hans";' }} />
+
     </>
   );
 }
