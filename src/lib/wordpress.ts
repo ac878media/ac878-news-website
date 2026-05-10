@@ -59,7 +59,7 @@ export function cleanContent(content: string): string {
   return cleaned.trim();
 }
 
-// Clean WordPress API response to remove problematic Yoast data
+// Clean WordPress API response to remove problematic Yoast data and other problematic fields
 export function cleanWPResponse(data: any): any {
   if (Array.isArray(data)) {
     return data.map(cleanWPResponse);
@@ -68,11 +68,38 @@ export function cleanWPResponse(data: any): any {
   if (typeof data === 'object' && data !== null) {
     const cleaned = { ...data };
     
-    // Remove Yoast-related fields that can contain raw HTML
-    delete cleaned.yoast_head;
-    delete cleaned.yoast_head_json;
+    // Remove all potentially problematic fields that might contain raw HTML/JSON
+    const fieldsToRemove = [
+      'yoast_head',
+      'yoast_head_json', 
+      '_embedded',
+      '_links',
+      'class_list',
+      'meta',
+      'tags',
+      'categories'
+    ];
     
-    // Recursively clean nested objects
+    fieldsToRemove.forEach(field => {
+      delete cleaned[field];
+    });
+    
+    // Only keep essential fields for posts
+    if (cleaned.type === 'post') {
+      const essentialFields = {
+        id: cleaned.id,
+        date: cleaned.date,
+        slug: cleaned.slug,
+        title: cleaned.title,
+        content: cleaned.content,
+        excerpt: cleaned.excerpt,
+        featured_media: cleaned.featured_media,
+        author: cleaned.author
+      };
+      return essentialFields;
+    }
+    
+    // For other objects, recursively clean
     Object.keys(cleaned).forEach(key => {
       if (typeof cleaned[key] === 'object') {
         cleaned[key] = cleanWPResponse(cleaned[key]);

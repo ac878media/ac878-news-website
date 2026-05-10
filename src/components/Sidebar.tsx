@@ -40,10 +40,9 @@ export default function Sidebar({ posts }: Props) {
                   {index + 1}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3
-                    className="text-sm font-medium leading-tight group-hover:text-accent transition-colors line-clamp-2 text-gray-900 dark:text-gray-100"
-                    dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-                  />
+                  <h3 className="text-sm font-medium leading-tight group-hover:text-accent transition-colors line-clamp-2 text-gray-900 dark:text-gray-100">
+                    {stripHtml(post.title.rendered)}
+                  </h3>
                   <time className="text-xs text-gray-400 dark:text-gray-400 mt-1 block">
                     {formatRelativeDate(post.date)}
                   </time>
