@@ -53,9 +53,9 @@ export function cleanContent(content: string): string {
   // Remove any Next.js hydration data that might leak from WordPress
   let cleaned = content.replace(/self\.__next_f\.push\([^}]+}.*$/g, '');
   // Remove Yoast SEO head data if it appears in content
-  cleaned = cleaned.replace(/<!-- This site is optimized with the Yoast SEO plugin.*?-->/gs, '');
+  cleaned = cleaned.replace(/<!-- This site is optimized with the Yoast SEO plugin[\s\S]*?-->/g, '');
   // Remove any stray script tags
-  cleaned = cleaned.replace(/<script[^>]*>.*?<\/script>/gs, '');
+  cleaned = cleaned.replace(/<script[^>]*>[\s\S]*?<\/script>/g, '');
   return cleaned.trim();
 }
 

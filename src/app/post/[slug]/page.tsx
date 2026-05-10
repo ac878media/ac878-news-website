@@ -85,9 +85,9 @@ export default async function PostPage({ params }: PageProps) {
     // Remove Next.js hydration data that might leak from WordPress
     .replace(/self\.__next_f\.push\([^}]+}.*$/g, '')
     // Remove Yoast SEO head data if it appears in content
-    .replace(/<!-- This site is optimized with the Yoast SEO plugin.*?-->/gs, '')
+    .replace(/<!-- This site is optimized with the Yoast SEO plugin[\s\S]*?-->/g, '')
     // Remove any stray script tags
-    .replace(/<script[^>]*>.*?<\/script>/gs, '');
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/g, '');
 
   // Fix single-paragraph posts: split on double newlines within <p> tags
   cleanContent = cleanContent.replace(/<p>([\s\S]*?)<\/p>/g, (match, inner) => {
