@@ -59,6 +59,32 @@ export function cleanContent(content: string): string {
   return cleaned.trim();
 }
 
+// Clean WordPress API response to remove problematic Yoast data
+export function cleanWPResponse(data: any): any {
+  if (Array.isArray(data)) {
+    return data.map(cleanWPResponse);
+  }
+  
+  if (typeof data === 'object' && data !== null) {
+    const cleaned = { ...data };
+    
+    // Remove Yoast-related fields that can contain raw HTML
+    delete cleaned.yoast_head;
+    delete cleaned.yoast_head_json;
+    
+    // Recursively clean nested objects
+    Object.keys(cleaned).forEach(key => {
+      if (typeof cleaned[key] === 'object') {
+        cleaned[key] = cleanWPResponse(cleaned[key]);
+      }
+    });
+    
+    return cleaned;
+  }
+  
+  return data;
+}
+
 export function categorizePost(post: WPPost): string {
   const title = post.title.rendered;
   const content = post.content.rendered;
@@ -78,7 +104,8 @@ export async function fetchPosts(perPage = 20, page = 1): Promise<WPPost[]> {
     { next: { revalidate: 300 } }
   );
   if (!res.ok) return [];
-  return res.json();
+  const data = await res.json();
+  return cleanWPResponse(data);
 }
 
 export async function fetchPostBySlug(slug: string): Promise<WPPost | null> {
@@ -88,7 +115,8 @@ export async function fetchPostBySlug(slug: string): Promise<WPPost | null> {
   );
   if (!res.ok) return null;
   const posts = await res.json();
-  return posts[0] || null;
+  const cleanedPosts = cleanWPResponse(posts);
+  return cleanedPosts[0] || null;
 }
 
 export async function searchPosts(query: string, perPage = 10): Promise<WPPost[]> {
@@ -97,7 +125,8 @@ export async function searchPosts(query: string, perPage = 10): Promise<WPPost[]
     { next: { revalidate: 60 } }
   );
   if (!res.ok) return [];
-  return res.json();
+  const data = await res.json();
+  return cleanWPResponse(data);
 }
 
 export async function fetchPostsByCategory(category: string, perPage = 10, page = 1): Promise<WPPost[]> {
@@ -119,14 +148,14 @@ export async function fetchAdjacentPosts(currentPost: WPPost): Promise<{ prev: W
     `${WP_API}/posts?categories=${DAILY_NEWS_CAT}&per_page=1&before=${currentPost.date}&orderby=date&order=desc&_embed`,
     { next: { revalidate: 300 } }
   );
-  const prevPosts = prevRes.ok ? await prevRes.json() : [];
+  const prevPosts = prevRes.ok ? cleanWPResponse(await prevRes.json()) : [];
   
   // Fetch the post published just after this one (newer)
   const nextRes = await fetch(
     `${WP_API}/posts?categories=${DAILY_NEWS_CAT}&per_page=1&after=${currentPost.date}&orderby=date&order=asc&_embed`,
     { next: { revalidate: 300 } }
   );
-  const nextPosts = nextRes.ok ? await nextRes.json() : [];
+  const nextPosts = nextRes.ok ? cleanWPResponse(await nextRes.json()) : [];
   
   return {
     prev: prevPosts[0] || null,
