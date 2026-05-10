@@ -49,6 +49,16 @@ export function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, '').replace(/&[^;]+;/g, ' ').trim();
 }
 
+export function cleanContent(content: string): string {
+  // Remove any Next.js hydration data that might leak from WordPress
+  let cleaned = content.replace(/self\.__next_f\.push\([^}]+}.*$/g, '');
+  // Remove Yoast SEO head data if it appears in content
+  cleaned = cleaned.replace(/<!-- This site is optimized with the Yoast SEO plugin.*?-->/gs, '');
+  // Remove any stray script tags
+  cleaned = cleaned.replace(/<script[^>]*>.*?<\/script>/gs, '');
+  return cleaned.trim();
+}
+
 export function categorizePost(post: WPPost): string {
   const title = post.title.rendered;
   const content = post.content.rendered;

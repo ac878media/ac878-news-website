@@ -6,7 +6,7 @@ import {
   fetchRelatedPosts,
   fetchAdjacentPosts, 
   categorizePost,
-  getBreadcrumbs 
+  getBreadcrumbs
 } from '@/lib/wordpress';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -78,10 +78,16 @@ export default async function PostPage({ params }: PageProps) {
   const relatedPosts = await fetchRelatedPosts(post, 4);
   const { prev, next } = await fetchAdjacentPosts(post);
 
-  // Clean content: remove social share widgets
+  // Clean content: remove social share widgets and problematic content
   let cleanContent = post.content.rendered
     .replace(/<div[^>]*class="[^"]*xs_social_share[^"]*"[^>]*>[\s\S]*?<\/div>\s*<\/div>/gi, '')
-    .replace(/<div[^>]*class="[^"]*xs_social[^"]*"[^>]*>[\s\S]*?<\/div>/gi, '');
+    .replace(/<div[^>]*class="[^"]*xs_social[^"]*"[^>]*>[\s\S]*?<\/div>/gi, '')
+    // Remove Next.js hydration data that might leak from WordPress
+    .replace(/self\.__next_f\.push\([^}]+}.*$/g, '')
+    // Remove Yoast SEO head data if it appears in content
+    .replace(/<!-- This site is optimized with the Yoast SEO plugin.*?-->/gs, '')
+    // Remove any stray script tags
+    .replace(/<script[^>]*>.*?<\/script>/gs, '');
 
   // Fix single-paragraph posts: split on double newlines within <p> tags
   cleanContent = cleanContent.replace(/<p>([\s\S]*?)<\/p>/g, (match, inner) => {
