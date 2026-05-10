@@ -6,6 +6,7 @@ import Sidebar from '@/components/Sidebar';
 import LoadMoreButton from '@/components/LoadMoreButton';
 import LastUpdated from '@/components/LastUpdated';
 import { formatRelativeDate, getFallbackImageUrl } from '@/lib/utils';
+import { sanitizeTitle } from '@/lib/sanitize';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -185,10 +186,9 @@ function FeaturedPostCard({ post }: { post: WPPost }) {
             <time className="text-sm font-medium bg-accent px-2 py-1 rounded-md mb-2 inline-block">
               {formatRelativeDate(post.date)}
             </time>
-            <h1
-              className="text-2xl md:text-3xl font-bold leading-tight group-hover:text-gray-200 transition-colors line-clamp-3"
-              dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-            />
+            <h1 className="text-2xl md:text-3xl font-bold leading-tight group-hover:text-gray-200 transition-colors line-clamp-3">
+              {sanitizeTitle(post.title.rendered)}
+            </h1>
           </div>
         </div>
       </article>
@@ -216,10 +216,9 @@ function SecondaryPostCard({ post }: { post: WPPost }) {
           <time className="text-xs text-gray-400 dark:text-gray-500">
             {formatRelativeDate(post.date)}
           </time>
-          <h2
-            className="mt-2 font-bold leading-snug group-hover:text-accent transition-colors line-clamp-2 text-gray-900 dark:text-gray-100"
-            dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-          />
+          <h2 className="mt-2 font-bold leading-snug group-hover:text-accent transition-colors line-clamp-2 text-gray-900 dark:text-gray-100">
+            {sanitizeTitle(post.title.rendered)}
+          </h2>
         </div>
       </article>
     </Link>
@@ -235,10 +234,9 @@ function LatestNewsItem({ post, index }: { post: WPPost; index: number }) {
           {index + 1}
         </div>
         <div className="flex-1 min-w-0">
-          <h3
-            className="font-medium group-hover:text-accent transition-colors line-clamp-2 text-gray-900 dark:text-gray-100"
-            dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-          />
+          <h3 className="font-medium group-hover:text-accent transition-colors line-clamp-2 text-gray-900 dark:text-gray-100">
+            {sanitizeTitle(post.title.rendered)}
+          </h3>
           <time className="text-sm text-gray-500 dark:text-gray-400 mt-1 block">
             {formatRelativeDate(post.date)}
           </time>

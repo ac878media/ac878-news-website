@@ -18,7 +18,7 @@ export default function Sidebar({ posts }: Props) {
     <aside className="space-y-8">
       {/* Weather Widget */}
       <WeatherWidget />
-
+      
       {/* Most Read Section */}
       <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md">
         <div className="flex items-center gap-3 mb-6">

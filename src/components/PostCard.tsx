@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { WPPost, getPostImage, stripHtml, categorizePost } from '@/lib/wordpress';
 import { formatRelativeDate, getFallbackImageUrl, calculateReadingTime, formatReadingTime } from '@/lib/utils';
+import { sanitizeTitle } from '@/lib/sanitize';
 
 export function PostCardLarge({ post }: { post: WPPost }) {
   const image = getPostImage(post) || getFallbackImageUrl(categorizePost(post), post.id);
@@ -26,10 +27,9 @@ export function PostCardLarge({ post }: { post: WPPost }) {
             <span>•</span>
             <span>{formatReadingTime(readingTime)}</span>
           </div>
-          <h3
-            className="text-lg font-bold leading-snug group-hover:text-accent transition-colors line-clamp-2 text-gray-900 dark:text-gray-100"
-            dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-          />
+          <h3 className="text-lg font-bold leading-snug group-hover:text-accent transition-colors line-clamp-2 text-gray-900 dark:text-gray-100">
+            {sanitizeTitle(post.title.rendered)}
+          </h3>
           {excerpt && <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 line-clamp-3">{excerpt}</p>}
         </div>
       </article>
@@ -59,10 +59,9 @@ export function PostCardSmall({ post }: { post: WPPost }) {
             <span>•</span>
             <span>{formatReadingTime(readingTime)}</span>
           </div>
-          <h4
-            className="text-sm font-semibold leading-snug group-hover:text-accent transition-colors line-clamp-3 text-gray-900 dark:text-gray-100"
-            dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-          />
+          <h4 className="text-sm font-semibold leading-snug group-hover:text-accent transition-colors line-clamp-3 text-gray-900 dark:text-gray-100">
+            {sanitizeTitle(post.title.rendered)}
+          </h4>
         </div>
       </article>
     </Link>
