@@ -78,7 +78,7 @@ export default async function PostPage({ params }: PageProps) {
   const relatedPosts = await fetchRelatedPosts(post, 4);
   const { prev, next } = await fetchAdjacentPosts(post);
 
-  // Clean content: remove social share widgets and problematic content
+  // Aggressive content cleaning: remove all problematic WordPress content
   let cleanContent = post.content.rendered
     .replace(/<div[^>]*class="[^"]*xs_social_share[^"]*"[^>]*>[\s\S]*?<\/div>\s*<\/div>/gi, '')
     .replace(/<div[^>]*class="[^"]*xs_social[^"]*"[^>]*>[\s\S]*?<\/div>/gi, '')
@@ -87,7 +87,24 @@ export default async function PostPage({ params }: PageProps) {
     // Remove Yoast SEO head data if it appears in content
     .replace(/<!-- This site is optimized with the Yoast SEO plugin[\s\S]*?-->/g, '')
     // Remove any stray script tags
-    .replace(/<script[^>]*>[\s\S]*?<\/script>/g, '');
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/g, '')
+    // Remove WordPress block editor CSS and complex markup
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/\.wp-block-[\s\S]*?}/gi, '')
+    .replace(/\.is-layout-[\s\S]*?}/gi, '')
+    .replace(/\.[a-zA-Z0-9_-]*\{[^}]*}/gi, '')
+    // Remove complex WordPress block wrappers
+    .replace(/<div class="wp-block-[^"]*"[^>]*>/gi, '<div>')
+    .replace(/<div class="[^"]*wp-block[^"]*"[^>]*>/gi, '<div>')
+    .replace(/<div class="[^"]*is-layout[^"]*"[^>]*>/gi, '<div>')
+    // Remove figure blocks that contain CSS
+    .replace(/<figure[^>]*class="[^"]*wp-block[^"]*"[^>]*>[\s\S]*?<\/figure>/gi, '')
+    // Remove any remaining CSS rules
+    .replace(/[.#][a-zA-Z0-9_-]+\s*\{[^}]*\}/gi, '')
+    // Clean up multiple empty divs
+    .replace(/<div>\s*<div>/gi, '<div>')
+    .replace(/<\/div>\s*<\/div>/gi, '</div>')
+    .replace(/<div>\s*<\/div>/gi, '');  
 
   // Fix single-paragraph posts: split on double newlines within <p> tags
   cleanContent = cleanContent.replace(/<p>([\s\S]*?)<\/p>/g, (match, inner) => {
