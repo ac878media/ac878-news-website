@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import Breadcrumbs from '@/components/Breadcrumbs';
 
@@ -28,12 +27,13 @@ export default function AboutPage() {
       <div className="bg-white rounded-xl shadow-lg overflow-hidden">
         {/* Header Section */}
         <div className="bg-gradient-to-r from-black to-gray-800 text-white p-8 text-center">
-          <Image
+          <img
             src="https://ac878.com.au/wp-content/uploads/2025/02/1024x1024.png"
             alt="AC878 Logo"
-            width={120}
-            height={120}
+            width="120"
+            height="120"
             className="rounded-xl mx-auto mb-6"
+            loading="eager"
           />
           <h1 className="text-3xl font-bold mb-2">878时讯</h1>
           <p className="text-xl text-gray-200 mb-2">AC878 News</p>

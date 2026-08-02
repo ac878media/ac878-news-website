@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { WPPost, getPostImage, stripHtml, categorizePost } from '@/lib/wordpress';
 import { formatRelativeDate, getFallbackImageUrl, calculateReadingTime, formatReadingTime } from '@/lib/utils';
@@ -13,12 +12,11 @@ export function PostCardLarge({ post }: { post: WPPost }) {
     <Link href={`/post/${post.slug}`} className="group block">
       <article className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow">
         <div className="relative aspect-video overflow-hidden">
-          <Image
+          <img
             src={image}
             alt={stripHtml(post.title.rendered)}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
-            sizes="(max-width: 768px) 100vw, 50vw"
+            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+            loading="lazy"
           />
         </div>
         <div className="p-5">
@@ -45,12 +43,11 @@ export function PostCardSmall({ post }: { post: WPPost }) {
     <Link href={`/post/${post.slug}`} className="group block">
       <article className="flex gap-4 bg-white dark:bg-gray-800 rounded-lg p-3 hover:shadow-md transition-shadow">
         <div className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
-          <Image
+          <img
             src={image}
             alt={stripHtml(post.title.rendered)}
-            fill
-            className="object-cover"
-            sizes="96px"
+            className="h-full w-full object-cover"
+            loading="lazy"
           />
         </div>
         <div className="flex-1 min-w-0">

@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { WPPost, stripHtml, getPostImage } from '@/lib/wordpress';
 import { formatRelativeDate } from '@/lib/utils';
@@ -80,12 +79,13 @@ export default function Sidebar({ posts }: Props) {
       {/* About AC878 */}
       <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md">
         <div className="text-center">
-          <Image
+          <img
             src="https://ac878.com.au/wp-content/uploads/2025/02/1024x1024.png"
             alt="AC878 Logo"
-            width={80}
-            height={80}
+            width="80"
+            height="80"
             className="rounded-lg mx-auto mb-4"
+            loading="lazy"
           />
           <h3 className="font-bold text-lg mb-2 text-gray-900 dark:text-gray-100">关于 AC878</h3>
           <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 leading-relaxed">

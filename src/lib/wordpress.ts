@@ -68,6 +68,21 @@ export function cleanWPResponse(data: any): any {
   if (typeof data === 'object' && data !== null) {
     const cleaned = { ...data };
     
+    const featuredMedia = cleaned._embedded?.['wp:featuredmedia']?.[0];
+    const safeEmbedded = featuredMedia ? {
+      'wp:featuredmedia': [{
+        source_url: featuredMedia.source_url,
+        alt_text: featuredMedia.alt_text,
+        media_details: {
+          sizes: {
+            medium_large: featuredMedia.media_details?.sizes?.medium_large,
+            medium: featuredMedia.media_details?.sizes?.medium,
+            full: featuredMedia.media_details?.sizes?.full,
+          },
+        },
+      }],
+    } : undefined;
+
     // Remove all potentially problematic fields that might contain raw HTML/JSON
     const fieldsToRemove = [
       'yoast_head',
@@ -94,7 +109,8 @@ export function cleanWPResponse(data: any): any {
         content: cleaned.content,
         excerpt: cleaned.excerpt,
         featured_media: cleaned.featured_media,
-        author: cleaned.author
+        author: cleaned.author,
+        ...(safeEmbedded ? { _embedded: safeEmbedded } : {})
       };
       return essentialFields;
     }

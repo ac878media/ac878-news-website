@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 
 export default function NotFound() {
@@ -6,12 +5,13 @@ export default function NotFound() {
     <div className="min-h-[60vh] flex items-center justify-center px-4">
       <div className="text-center max-w-md mx-auto">
         <div className="mb-8">
-          <Image
+          <img
             src="https://ac878.com.au/wp-content/uploads/2025/02/1024x1024.png"
             alt="AC878"
-            width={120}
-            height={120}
+            width="120"
+            height="120"
             className="rounded-xl mx-auto mb-6 opacity-50"
+            loading="eager"
           />
           <div className="text-8xl font-bold text-gray-200 mb-4">404</div>
         </div>

@@ -10,7 +10,6 @@ import {
 } from '@/lib/wordpress';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import Image from 'next/image';
 
 import Link from 'next/link';
 import { formatRelativeDate, formatFullDate, getFallbackImageUrl, calculateReadingTime, formatReadingTime } from '@/lib/utils';
@@ -156,13 +155,11 @@ export default async function PostPage({ params }: PageProps) {
 
         {/* Featured Image */}
         <div className="relative aspect-video mb-8 rounded-xl overflow-hidden shadow-lg">
-          <Image
+          <img
             src={image}
             alt={title}
-            fill
-            className="object-cover"
-            sizes="(max-width: 896px) 100vw, 896px"
-            priority
+            className="h-full w-full object-cover"
+            loading="eager"
           />
         </div>
 

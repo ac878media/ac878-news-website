@@ -7,7 +7,6 @@ import LoadMoreButton from '@/components/LoadMoreButton';
 import LastUpdated from '@/components/LastUpdated';
 import { formatRelativeDate, getFallbackImageUrl } from '@/lib/utils';
 import { sanitizeTitle } from '@/lib/sanitize';
-import Image from 'next/image';
 import Link from 'next/link';
 
 
@@ -172,13 +171,11 @@ function FeaturedPostCard({ post }: { post: WPPost }) {
     <Link href={`/post/${post.slug}`} className="group block">
       <article className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-full">
         <div className="relative aspect-video overflow-hidden">
-          <Image
+          <img
             src={image}
             alt={post.title.rendered}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
-            sizes="(max-width: 768px) 100vw, 75vw"
-            priority
+            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+            loading="eager"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
           <div className="absolute bottom-4 left-4 right-4 text-white">
@@ -203,12 +200,11 @@ function SecondaryPostCard({ post }: { post: WPPost }) {
     <Link href={`/post/${post.slug}`} className="group block">
       <article className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
         <div className="relative aspect-video overflow-hidden">
-          <Image
+          <img
             src={image}
             alt={post.title.rendered}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
-            sizes="33vw"
+            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+            loading="lazy"
           />
         </div>
         <div className="p-4">

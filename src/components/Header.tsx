@@ -1,5 +1,4 @@
 
-import Image from 'next/image';
 import Link from 'next/link';
 import MobileNav from './MobileNav';
 import NavDropdown from './NavDropdown';
@@ -10,13 +9,14 @@ export default function Header() {
     <header className="bg-black sticky top-0 z-50 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
-          <Image
+          <img
             src="https://ac878.com.au/wp-content/uploads/2025/02/1024x1024.png"
             alt="AC878"
-            width={48}
-            height={48}
+            width="48"
+            height="48"
             className="rounded-lg bg-white p-2 shadow-sm"
             style={{ backgroundColor: 'white' }}
+            loading="eager"
           />
           <div>
             <span className="text-white text-xl font-bold tracking-tight">878时讯</span>
