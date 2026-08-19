@@ -12,6 +12,9 @@ import Link from 'next/link';
 
 export const revalidate = 300;
 
+const SCAM_AWARENESS_EVENT_URL =
+  'https://events.humanitix.com/stay-safe-stay-informed-scam-awareness-for-mandarin-speaking-seniors';
+
 async function fetchOctopusBanner(): Promise<string> {
   try {
     const res = await fetch(
@@ -61,6 +64,24 @@ export default async function HomePage() {
     <>
       {/* Breaking News Ticker */}
       <BreakingNewsTicker posts={posts} />
+
+      {/* Scam Awareness Event Banner */}
+      <div className="max-w-7xl mx-auto px-4 pt-6">
+        <a
+          href={SCAM_AWARENESS_EVENT_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/banners/scam-awareness-mandarin-seniors.jpg"
+            alt="Stay Safe, Stay Informed - Scam Awareness for Mandarin Speaking Seniors"
+            className="w-full h-auto rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
+            loading="eager"
+          />
+        </a>
+      </div>
 
       {/* Octopus Magazine Banner - auto-fetches latest from WordPress */}
       <div className="max-w-7xl mx-auto px-4 pt-6">
