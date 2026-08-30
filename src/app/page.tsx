@@ -12,9 +12,6 @@ import Link from 'next/link';
 
 export const revalidate = 300;
 
-const SCAM_AWARENESS_EVENT_URL =
-  'https://events.humanitix.com/stay-safe-stay-informed-scam-awareness-for-mandarin-speaking-seniors';
-
 export default async function HomePage() {
   const posts = await fetchPosts(20); // Reduced to avoid cache size issues
 
@@ -85,24 +82,6 @@ export default async function HomePage() {
                   ))}
                 </div>
               </div>
-            </section>
-
-            {/* Scam Awareness Event Banner */}
-            <section className="mb-12">
-              <a
-                href={SCAM_AWARENESS_EVENT_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/banners/scam-awareness-mandarin-seniors.jpg"
-                  alt="Stay Safe, Stay Informed - Scam Awareness for Mandarin Speaking Seniors"
-                  className="w-full h-auto rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
-                  loading="lazy"
-                />
-              </a>
             </section>
 
             {/* Category Sections */}
