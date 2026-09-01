@@ -18,6 +18,7 @@ export default async function HomePage() {
   const categories: Record<string, WPPost[]> = {
     australia: [],
     business: [],
+    china: [],
     international: [],
   };
 
@@ -54,9 +55,11 @@ export default async function HomePage() {
           {/* Main Content */}
           <div className="lg:col-span-3">
             {/* Hero Section - Featured story full width */}
-            <section className="mb-12">
-              <FeaturedPostCard post={featuredPost} />
-            </section>
+            {featuredPost && (
+              <section className="mb-12">
+                <FeaturedPostCard post={featuredPost} />
+              </section>
+            )}
 
             {/* Latest News Section */}
             <section className="mb-12">
@@ -99,6 +102,13 @@ export default async function HomePage() {
                 subtitle="Business & Finance" 
                 posts={categories.business}
                 category="business"
+              />
+              <CategorySectionEnhanced
+                id="china"
+                title="中港新闻"
+                subtitle="Mainland China & HK News"
+                posts={categories.china}
+                category="china"
               />
 
               <CategorySectionEnhanced 

@@ -1,5 +1,9 @@
 const WP_API = 'https://ac878.com.au/wp-json/wp/v2';
 const DAILY_NEWS_CAT = 5114;
+const WP_FETCH_HEADERS = {
+  'User-Agent': 'AC878-News-Portal/1.0 (+https://news.ac878.com.au)',
+  'Accept': 'application/json',
+};
 
 export interface WPPost {
   id: number;
@@ -10,6 +14,7 @@ export interface WPPost {
   excerpt: { rendered: string };
   featured_media: number;
   categories: number[];
+  tags?: number[];
   _embedded?: {
     'wp:featuredmedia'?: Array<{
       source_url: string;
@@ -91,7 +96,6 @@ export function cleanWPResponse(data: any): any {
       '_links',
       'class_list',
       'meta',
-      'tags',
       'categories'
     ];
     
@@ -110,6 +114,7 @@ export function cleanWPResponse(data: any): any {
         excerpt: cleaned.excerpt,
         featured_media: cleaned.featured_media,
         author: cleaned.author,
+        tags: Array.isArray(cleaned.tags) ? cleaned.tags : [],
         ...(safeEmbedded ? { _embedded: safeEmbedded } : {})
       };
       return essentialFields;
@@ -129,35 +134,52 @@ export function cleanWPResponse(data: any): any {
 }
 
 export function categorizePost(post: WPPost): string {
-  const title = post.title.rendered;
-  const content = post.content.rendered;
-  const text = title + ' ' + content;
-  
-  if (/财经|股市|经济|金融|ASX|市场|投资|银行|利率/.test(text)) return 'business';
+  const title = stripHtml(post.title.rendered);
+  const content = stripHtml(post.content.rendered);
+  const text = `${title} ${content}`;
+  const tags = new Set(post.tags || []);
+
+  if (/中国|香港|澳门|北京|台湾|两岸|港澳|西藏|习近平|上合组织|上海合作组织/.test(title)) return 'china';
+  if (/美国|华盛顿|白宫|特朗普|拜登|法国|欧洲|英国|德国|俄罗斯|乌克兰|伊朗|以色列|日本|韩国|尼泊尔|联合国/.test(title)) return 'international';
+  if (/澳洲|澳大利亚|悉尼|墨尔本|堪培拉|昆士兰|维州|新州|阿尔巴尼斯/.test(title)) return 'australia';
+  if (/财经|股市|经济|金融|ASX|市场|投资|银行|利率|通胀|澳元/.test(title)) return 'business';
+
+  if ([112].some(tag => tags.has(tag))) return 'china';
+  if ([1371, 5134].some(tag => tags.has(tag))) return 'international';
+  if ([1581, 1583, 5128, 5135].some(tag => tags.has(tag))) return 'business';
+  if ([1369, 5130, 5126, 5132, 54, 2491, 1810].some(tag => tags.has(tag))) return 'australia';
+
   if (/中国|香港|澳门|北京|台湾|两岸|港澳/.test(text)) return 'china';
   if (/国际|全球|美国|欧洲|英国|日本|世界|联合国/.test(text)) return 'international';
+  if (/财经|股市|经济|金融|ASX|市场|投资|银行|利率/.test(text)) return 'business';
   if (/澳洲|澳大利亚|悉尼|墨尔本|堪培拉|昆士兰|维州|新州/.test(text)) return 'australia';
-  
+
   return 'australia';
 }
 
 export async function fetchPosts(perPage = 20, page = 1): Promise<WPPost[]> {
-  const res = await fetch(
-    `${WP_API}/posts?categories=${DAILY_NEWS_CAT}&per_page=${perPage}&page=${page}&_embed`,
-    { next: { revalidate: 300 } }
-  );
-  if (!res.ok) return [];
-  const data = await res.json();
-  return cleanWPResponse(data);
+  try {
+    const res = await fetch(
+      `${WP_API}/posts?categories=${DAILY_NEWS_CAT}&per_page=${perPage}&page=${page}&_embed`,
+      { headers: WP_FETCH_HEADERS, next: { revalidate: 300 } }
+    );
+    if (!res.ok) return [];
+    const data = await res.json();
+    if (!Array.isArray(data)) return [];
+    return cleanWPResponse(data);
+  } catch {
+    return [];
+  }
 }
 
 export async function fetchPostBySlug(slug: string): Promise<WPPost | null> {
   const res = await fetch(
     `${WP_API}/posts?slug=${encodeURIComponent(slug)}&_embed`,
-    { next: { revalidate: 300 } }
+    { headers: WP_FETCH_HEADERS, next: { revalidate: 300 } }
   );
   if (!res.ok) return null;
   const posts = await res.json();
+  if (!Array.isArray(posts)) return null;
   const cleanedPosts = cleanWPResponse(posts);
   return cleanedPosts[0] || null;
 }
@@ -165,10 +187,11 @@ export async function fetchPostBySlug(slug: string): Promise<WPPost | null> {
 export async function searchPosts(query: string, perPage = 10): Promise<WPPost[]> {
   const res = await fetch(
     `${WP_API}/posts?search=${encodeURIComponent(query)}&categories=${DAILY_NEWS_CAT}&per_page=${perPage}&_embed`,
-    { next: { revalidate: 60 } }
+    { headers: WP_FETCH_HEADERS, next: { revalidate: 60 } }
   );
   if (!res.ok) return [];
   const data = await res.json();
+  if (!Array.isArray(data)) return [];
   return cleanWPResponse(data);
 }
 
@@ -189,14 +212,14 @@ export async function fetchAdjacentPosts(currentPost: WPPost): Promise<{ prev: W
   // Fetch the post published just before this one (older)
   const prevRes = await fetch(
     `${WP_API}/posts?categories=${DAILY_NEWS_CAT}&per_page=1&before=${currentPost.date}&orderby=date&order=desc&_embed`,
-    { next: { revalidate: 300 } }
+    { headers: WP_FETCH_HEADERS, next: { revalidate: 300 } }
   );
   const prevPosts = prevRes.ok ? cleanWPResponse(await prevRes.json()) : [];
   
   // Fetch the post published just after this one (newer)
   const nextRes = await fetch(
     `${WP_API}/posts?categories=${DAILY_NEWS_CAT}&per_page=1&after=${currentPost.date}&orderby=date&order=asc&_embed`,
-    { next: { revalidate: 300 } }
+    { headers: WP_FETCH_HEADERS, next: { revalidate: 300 } }
   );
   const nextPosts = nextRes.ok ? cleanWPResponse(await nextRes.json()) : [];
   
