@@ -31,7 +31,7 @@ export default async function HomePage() {
   }
 
   // Take the most recent posts for different sections
-  const featuredPost = posts[0];
+  const featuredPost = posts[0] || null;
   const heroSecondaryPosts = posts.slice(1, 3);
   const latestNewsPosts = posts.slice(0, 10);
 
@@ -80,9 +80,13 @@ export default async function HomePage() {
               </div>
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
                 <div className="space-y-4">
-                  {latestNewsPosts.map((post, index) => (
-                    <LatestNewsItem key={post.id} post={post} index={index} />
-                  ))}
+                  {latestNewsPosts.length > 0 ? (
+                    latestNewsPosts.map((post, index) => (
+                      <LatestNewsItem key={post.id} post={post} index={index} />
+                    ))
+                  ) : (
+                    <p className="text-sm text-gray-500 dark:text-gray-400">新闻暂时无法载入，请稍后再试。</p>
+                  )}
                 </div>
               </div>
             </section>

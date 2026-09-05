@@ -113,8 +113,9 @@ export function cleanWPResponse(data: any): any {
         content: cleaned.content,
         excerpt: cleaned.excerpt,
         featured_media: cleaned.featured_media,
-        author: cleaned.author,
+        categories: Array.isArray(cleaned.categories) ? cleaned.categories : [],
         tags: Array.isArray(cleaned.tags) ? cleaned.tags : [],
+        author: cleaned.author,
         ...(safeEmbedded ? { _embedded: safeEmbedded } : {})
       };
       return essentialFields;
@@ -140,7 +141,7 @@ export function categorizePost(post: WPPost): string {
   const tags = new Set(post.tags || []);
 
   if (/中国|香港|澳门|北京|台湾|两岸|港澳|西藏|习近平|上合组织|上海合作组织/.test(title)) return 'china';
-  if (/美国|华盛顿|白宫|特朗普|拜登|法国|欧洲|英国|德国|俄罗斯|乌克兰|伊朗|以色列|日本|韩国|尼泊尔|联合国/.test(title)) return 'international';
+  if (/美国|华盛顿|白宫|特朗普|拜登|法国|欧洲|英国|德国|俄罗斯|乌克兰|伊朗|以色列|日本|韩国|尼泊尔|孟加拉国|印度|联合国/.test(title)) return 'international';
   if (/澳洲|澳大利亚|悉尼|墨尔本|堪培拉|昆士兰|维州|新州|阿尔巴尼斯/.test(title)) return 'australia';
   if (/财经|股市|经济|金融|ASX|市场|投资|银行|利率|通胀|澳元/.test(title)) return 'business';
 
